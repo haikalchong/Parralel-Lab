@@ -27,7 +27,7 @@ return '<div class="form-group">' + label + widget + error + '</div>'
 
 }
 
-const createProductForm = ()=>{
+const createProductForm = (categories)=>{
     return forms.create({
         'name':fields.string({
             required:true,
@@ -52,6 +52,16 @@ const createProductForm = ()=>{
                 label:['form-label']
             }
         }),
+        'category_id' : fields.string({
+            label:'Category',
+            required:true,
+            errorAfterField:true,
+            cssClasses:{
+                label:['form-label']
+            },
+            widget:widgets.select(),
+            choices:categories
+        })
     })
 }
 

@@ -2,7 +2,7 @@ const express = require("express")
 const router= express.Router();
 const {bootstrapField, createProductForm}=require('../forms')
 
-const {Product} = require('../models');
+const {Product, Category} = require('../models');
 const { fields } = require("forms");
 
 router.get('/', async(req,res)=>{
@@ -20,7 +20,11 @@ router.get('/create', async (req,res)=>{
 })
 
 router.post('/create', async(req,res)=>{
-    const productForm = createProductForm();
+    const allCategories= (await Category.fetchAll()).invokeMap((category)=>{
+        return [category.get('id'), category.get('name')];
+    })
+
+    const productForm = createProductForm(allCategories);
     productForm.handle(req,{
         'success':async(form)=>{
             const product = new Product();
@@ -104,5 +108,7 @@ router.post('/:product_id/delete', async(req,res)=>{
     await product.destroy();
     res.redirect('/products')
 })
+
+
 
 module.exports = router;
